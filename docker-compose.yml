@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend_app:
+    build:
+      context: ./
+      dockerfile: app.docker
+    container_name: backend_app
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "4000:4000"
+
+  frontend_app:
+    build:
+      context: ./
+      dockerfile: web.docker
+    container_name: frontend_app
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend_app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - FAST_REFRESH=false
+      - PORT=3000
